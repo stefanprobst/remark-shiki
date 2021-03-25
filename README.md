@@ -60,7 +60,9 @@ processor.process(doc).then((vfile) => {
 
 ## Options
 
-You can pass a custom [`theme`](https://github.com/shikijs/shiki/blob/master/docs/themes.md) (any VS Code theme should work):
+You can pass a custom
+[`theme`](https://github.com/shikijs/shiki/blob/master/docs/themes.md) (any VS
+Code theme should work):
 
 ```js
 const processor = unified()
