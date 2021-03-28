@@ -7,6 +7,11 @@ function attacher(options = {}) {
   return transformer
 
   async function transformer(tree) {
+    /**
+     * Since `getHighlighter` is async, this means that the `unified` processor
+     * cannot be run with `processSync`. We could accept a `shiki` instance via
+     * plugin options to get around this.
+     */
     const highlighter = await shiki.getHighlighter({ theme })
 
     visit(tree, 'code', visitor)

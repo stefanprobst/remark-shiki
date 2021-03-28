@@ -18,8 +18,8 @@
   },
   "dependencies": {
     "shiki": "^0.9.3",
-    "unist-util-visit": "^2.0.3",
-    "unified": "^9.2.1"
+    "unified": "^9.2.1",
+    "unist-util-visit": "^2.0.3"
   },
   "devDependencies": {
     "@commitlint/cli": "^12.0.1",
