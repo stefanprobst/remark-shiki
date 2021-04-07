@@ -1,8 +1,10 @@
 import { Plugin } from 'unified'
+import { HighlighterOptions } from 'shiki'
 
 declare namespace withShiki {
   interface Options {
-    theme?: string
+    theme?: HighlighterOptions['theme']
+    langs?: HighlighterOptions['langs']
   }
 }
 
