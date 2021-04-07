@@ -60,13 +60,47 @@ processor.process(doc).then((vfile) => {
 
 ## Options
 
-You can pass a custom
-[`theme`](https://github.com/shikijs/shiki/blob/master/docs/themes.md) (any VS
-Code theme should work):
+### Theme
+
+You can either pass one of the
+[built-in themes](https://github.com/shikijs/shiki/blob/master/docs/themes.md#all-themes)
+as string, or load a custom theme (any TextMate/VS Code theme should work):
 
 ```js
+// const gloom = await shiki.loadTheme(path.join(process.cwd(), 'gloom.json'))
+// const gloom = require('./gloom.json')
+const gloom = JSON.parse(
+  fs.readFileSync(path.join(process.cwd(), "gloom.json"), "utf-8"),
+)
+
 const processor = unified()
   .use(fromMarkdown)
-  .use(withShiki, { theme: "gloom" })
+  .use(withShiki, { theme: gloom })
   .use(toMarkdown)
 ```
+
+### Supported languages
+
+Languages which are not included in Shiki's
+[built-in grammars](https://github.com/shikijs/shiki/blob/master/docs/languages.md#all-languages)
+can be added as TextMate grammars:
+
+```js
+const sparql = {
+  id: "sparql",
+  scopeName: "source.sparql",
+  // provide either `path` or `grammar`
+  path: path.join(process.cwd(), "sparql.tmLanguage.json"),
+  // grammar: JSON.parse(
+  //   fs.readFileSync(path.join(process.cwd(), "sparql.tmLanguage.json")),
+  // ),
+}
+
+const processor = unified()
+  .use(fromMarkdown)
+  .use(withShiki, { langs: [...shiki.BUNDLED_LANGUAGES, sparql] })
+  .use(toMarkdown)
+```
+
+Note that `langs` will substitute the default languages. To keep the built-in
+grammars, concat `shiki.BUNDLED_LANGUAGES`.
