@@ -1,13 +1,12 @@
-import { Plugin } from 'unified'
-import { HighlighterOptions } from 'shiki'
+import type { Plugin } from 'unified'
+import type { Highlighter } from 'shiki'
 
 declare namespace withShiki {
   interface Options {
-    theme?: HighlighterOptions['theme']
-    langs?: HighlighterOptions['langs']
+    highlighter: Highlighter
   }
 }
 
-declare const withShiki: Plugin<[withShiki.Options?]>
+declare const withShiki: Plugin<[withShiki.Options]>
 
 export = withShiki

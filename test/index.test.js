@@ -3,6 +3,7 @@ const withHtmlInMarkdown = require('rehype-raw')
 const toHtml = require('rehype-stringify')
 const fromMarkdown = require('remark-parse')
 const toHast = require('remark-rehype')
+const shiki = require('shiki')
 const unified = require('unified')
 const withShiki = require('../src')
 
@@ -10,15 +11,23 @@ const fixture = fs.readFileSync(__dirname + '/fixtures/test.md', {
   encoding: 'utf-8',
 })
 
-const processor = unified()
-  .use(fromMarkdown)
-  .use(withShiki)
-  .use(toHast, { allowDangerousHtml: true })
-  .use(withHtmlInMarkdown)
-  .use(toHtml)
+async function createProcessor() {
+  const highlighter = await shiki.getHighlighter({ theme: 'nord' })
+
+  const processor = unified()
+    .use(fromMarkdown)
+    .use(withShiki, { highlighter })
+    .use(toHast, { allowDangerousHtml: true })
+    .use(withHtmlInMarkdown)
+    .use(toHtml)
+
+  return processor
+}
 
 it('highlights code blocks in markdown', async () => {
+  const processor = await createProcessor()
   const vfile = await processor.process(fixture)
+
   expect(vfile.toString()).toMatchInlineSnapshot(`
     "<h1>Heading</h1>
     <p>Text</p>

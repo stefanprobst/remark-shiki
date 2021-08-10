@@ -6,7 +6,7 @@ Highlight code blocks in markdown with
 ## How to install
 
 ```sh
-yarn add @stefanprobst/remark-shiki
+yarn add shiki @stefanprobst/remark-shiki
 ```
 
 ## How to use
@@ -22,16 +22,28 @@ To highlight code blocks in markdown:
 ````js
 const unified = require("unified")
 const fromMarkdown = require("remark-parse")
+const shiki = require("shiki")
 const withShiki = require("@stefanprobst/remark-shiki")
 const toMarkdown = require("remark-stringify")
 
 const doc = "```js\nconst hello = 'World';\n```\n"
 
-const processor = unified().use(fromMarkdown).use(withShiki).use(toMarkdown)
+async function createProcessor() {
+  const highlighter = await shiki.getHighlighter({ theme: "poimandres " })
 
-processor.process(doc).then((vfile) => {
-  console.log(vfile.toString())
-})
+  const processor = unified()
+    .use(fromMarkdown)
+    .use(withShiki, { highlighter })
+    .use(toMarkdown)
+
+  return processor
+}
+
+createProcessor()
+  .then((processor) => processor.process(doc))
+  .then((vfile) => {
+    console.log(String(vfile))
+  })
 ````
 
 When transforming to html, make sure to parse `html` nodes with `rehype-raw`:
@@ -39,26 +51,38 @@ When transforming to html, make sure to parse `html` nodes with `rehype-raw`:
 ````js
 const unified = require("unified")
 const fromMarkdown = require("remark-parse")
-const withShiki = require("../src")
+const shiki = require("shiki")
+const withShiki = require("@stefanprobst/remark-shiki")
 const toHast = require("remark-rehype")
 const withHtmlInMarkdown = require("rehype-raw")
 const toHtml = require("rehype-stringify")
 
 const doc = "```js\nconst hello = 'World';\n```\n"
 
-const processor = unified()
-  .use(fromMarkdown)
-  .use(withShiki)
-  .use(toHast, { allowDangerousHtml: true })
-  .use(withHtmlInMarkdown)
-  .use(toHtml)
+async function createProcessor() {
+  const highlighter = await shiki.getHighlighter({ theme: "poimandres " })
 
-processor.process(doc).then((vfile) => {
-  console.log(vfile.toString())
-})
+  const processor = unified()
+    .use(fromMarkdown)
+    .use(withShiki, { highlighter })
+    .use(toHast, { allowDangerousHtml: true })
+    .use(withHtmlInMarkdown)
+    .use(toHtml)
+
+  return processor
+}
+
+createProcessor()
+  .then((processor) => processor.process(doc))
+  .then((vfile) => {
+    console.log(String(vfile))
+  })
 ````
 
-## Options
+## Configuration
+
+This plugin accepts a preconfigured `highlighter` instance created with
+`shiki.getHighlighter`.
 
 ### Theme
 
@@ -73,9 +97,11 @@ const gloom = JSON.parse(
   fs.readFileSync(path.join(process.cwd(), "gloom.json"), "utf-8"),
 )
 
+const highlighter = await shiki.getHighlighter({ theme: gloom })
+
 const processor = unified()
   .use(fromMarkdown)
-  .use(withShiki, { theme: gloom })
+  .use(withShiki, { highlighter })
   .use(toMarkdown)
 ```
 
@@ -96,9 +122,13 @@ const sparql = {
   // ),
 }
 
+const highlighter = await shiki.getHighlighter({
+  langs: [...shiki.BUNDLED_LANGUAGES, sparql],
+})
+
 const processor = unified()
   .use(fromMarkdown)
-  .use(withShiki, { langs: [...shiki.BUNDLED_LANGUAGES, sparql] })
+  .use(withShiki, { highlighter })
   .use(toMarkdown)
 ```
 
