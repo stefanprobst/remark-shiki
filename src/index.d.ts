@@ -4,6 +4,8 @@ import type { Highlighter } from 'shiki'
 declare namespace withShiki {
   interface Options {
     highlighter: Highlighter
+    /** @default true */
+    ignoreMissing?: boolean
   }
 }
 

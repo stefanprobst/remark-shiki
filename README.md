@@ -134,3 +134,9 @@ const processor = unified()
 
 Note that `langs` will substitute the default languages. To keep the built-in
 grammars, concat `shiki.BUNDLED_LANGUAGES`.
+
+### Unknown languages
+
+Unknown languages are ignored by default. You can set
+`ignoreUnknownLanguage: false` to throw an error when an unsupported language is
+encountered.
