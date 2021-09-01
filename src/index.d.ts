@@ -5,7 +5,7 @@ declare namespace withShiki {
   interface Options {
     highlighter: Highlighter
     /** @default true */
-    ignoreMissing?: boolean
+    ignoreUnknownLanguage?: boolean
   }
 }
 
