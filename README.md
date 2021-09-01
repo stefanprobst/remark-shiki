@@ -20,16 +20,16 @@ processor.
 To highlight code blocks in markdown:
 
 ````js
-const unified = require("unified")
-const fromMarkdown = require("remark-parse")
-const shiki = require("shiki")
-const withShiki = require("@stefanprobst/remark-shiki")
-const toMarkdown = require("remark-stringify")
+import withShiki from '@stefanprobst/remark-shiki'
+import toMarkdown from 'remark-stringify'
+import fromMarkdown from 'remark-parse'
+import * as shiki from 'shiki'
+import { unified } from 'unified'
 
 const doc = "```js\nconst hello = 'World';\n```\n"
 
 async function createProcessor() {
-  const highlighter = await shiki.getHighlighter({ theme: "poimandres " })
+  const highlighter = await shiki.getHighlighter({ theme: 'poimandres ' })
 
   const processor = unified()
     .use(fromMarkdown)
@@ -49,18 +49,18 @@ createProcessor()
 When transforming to html, make sure to parse `html` nodes with `rehype-raw`:
 
 ````js
-const unified = require("unified")
-const fromMarkdown = require("remark-parse")
-const shiki = require("shiki")
-const withShiki = require("@stefanprobst/remark-shiki")
-const toHast = require("remark-rehype")
-const withHtmlInMarkdown = require("rehype-raw")
-const toHtml = require("rehype-stringify")
+import withShiki from '@stefanprobst/remark-shiki'
+import fromMarkdown from 'remark-parse'
+import * as shiki from 'shiki'
+import { unified } from 'unified'
+import toHast from 'remark-rehype'
+import withHtmlInMarkdown from 'rehype-raw'
+import toHtml from 'rehype-stringify'
 
 const doc = "```js\nconst hello = 'World';\n```\n"
 
 async function createProcessor() {
-  const highlighter = await shiki.getHighlighter({ theme: "poimandres " })
+  const highlighter = await shiki.getHighlighter({ theme: 'poimandres ' })
 
   const processor = unified()
     .use(fromMarkdown)
@@ -94,7 +94,7 @@ as string, or load a custom theme (any TextMate/VS Code theme should work):
 // const gloom = await shiki.loadTheme(path.join(process.cwd(), 'gloom.json'))
 // const gloom = require('./gloom.json')
 const gloom = JSON.parse(
-  fs.readFileSync(path.join(process.cwd(), "gloom.json"), "utf-8"),
+  fs.readFileSync(path.join(process.cwd(), 'gloom.json'), 'utf-8'),
 )
 
 const highlighter = await shiki.getHighlighter({ theme: gloom })
@@ -113,10 +113,10 @@ can be added as TextMate grammars:
 
 ```js
 const sparql = {
-  id: "sparql",
-  scopeName: "source.sparql",
+  id: 'sparql',
+  scopeName: 'source.sparql',
   // provide either `path` or `grammar`
-  path: path.join(process.cwd(), "sparql.tmLanguage.json"),
+  path: path.join(process.cwd(), 'sparql.tmLanguage.json'),
   // grammar: JSON.parse(
   //   fs.readFileSync(path.join(process.cwd(), "sparql.tmLanguage.json")),
   // ),

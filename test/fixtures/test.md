@@ -3,7 +3,7 @@
 Text
 
 ```js
-const hello = "World"
+const hello = 'World'
 ```
 
 More text

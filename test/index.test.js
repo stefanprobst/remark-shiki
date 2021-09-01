@@ -1,20 +1,23 @@
-const fs = require('fs')
-const withHtmlInMarkdown = require('rehype-raw')
-const toHtml = require('rehype-stringify')
-const fromMarkdown = require('remark-parse')
-const toHast = require('remark-rehype')
-const shiki = require('shiki')
-const unified = require('unified')
-const withShiki = require('../src')
+import * as fs from 'fs'
+import * as path from 'path'
+
+import withHtmlInMarkdown from 'rehype-raw'
+import toHtml from 'rehype-stringify'
+import fromMarkdown from 'remark-parse'
+import toHast from 'remark-rehype'
+import * as shiki from 'shiki'
+import { unified } from 'unified'
+
+import withShiki from '../src'
 
 const fixtures = {
-  known: fs.readFileSync(__dirname + '/fixtures/test.md', {
+  known: fs.readFileSync(path.resolve('./test/fixtures/test.md'), {
     encoding: 'utf-8',
   }),
-  none: fs.readFileSync(__dirname + '/fixtures/none.md', {
+  none: fs.readFileSync(path.resolve('./test/fixtures/none.md'), {
     encoding: 'utf-8',
   }),
-  unknown: fs.readFileSync(__dirname + '/fixtures/unknown.md', {
+  unknown: fs.readFileSync(path.resolve('./test/fixtures/unknown.md'), {
     encoding: 'utf-8',
   }),
 }
@@ -37,11 +40,11 @@ it('highlights code block in markdown', async () => {
   const vfile = await processor.process(fixtures.known)
 
   expect(vfile.toString()).toMatchInlineSnapshot(`
-    "<h1>Heading</h1>
-    <p>Text</p>
-    <pre class=\\"shiki\\" style=\\"background-color: #2e3440ff\\"><code><span class=\\"line\\"><span style=\\"color: #81A1C1\\">const</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #D8DEE9\\">hello</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #81A1C1\\">=</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #ECEFF4\\">\\"</span><span style=\\"color: #A3BE8C\\">World</span><span style=\\"color: #ECEFF4\\">\\"</span></span></code></pre>
-    <p>More text</p>"
-  `)
+"<h1>Heading</h1>
+<p>Text</p>
+<pre class=\\"shiki\\" style=\\"background-color: #2e3440ff\\"><code><span class=\\"line\\"><span style=\\"color: #81A1C1\\">const</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #D8DEE9\\">hello</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #81A1C1\\">=</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #ECEFF4\\">'</span><span style=\\"color: #A3BE8C\\">World</span><span style=\\"color: #ECEFF4\\">'</span></span></code></pre>
+<p>More text</p>"
+`)
 })
 
 it('ignores code block without language', async () => {
