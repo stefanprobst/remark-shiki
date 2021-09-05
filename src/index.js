@@ -8,7 +8,7 @@ export default function attacher(options) {
 
   return transformer
 
-  async function transformer(tree) {
+  function transformer(tree) {
     visit(tree, 'code', visitor)
 
     function visitor(node) {

@@ -13,10 +13,6 @@ yarn add shiki @stefanprobst/remark-shiki
 
 This package is a [`remark`](https://github.com/remarkjs/remark) plugin.
 
-Note that `shiki` only runs async, so you must use the `process`, not the
-`processSync` method on your [`unified`](https://github.com/unifiedjs/unified)
-processor.
-
 To highlight code blocks in markdown:
 
 ````js
@@ -29,7 +25,7 @@ import { unified } from 'unified'
 const doc = "```js\nconst hello = 'World';\n```\n"
 
 async function createProcessor() {
-  const highlighter = await shiki.getHighlighter({ theme: 'poimandres ' })
+  const highlighter = await shiki.getHighlighter({ theme: 'poimandres' })
 
   const processor = unified()
     .use(fromMarkdown)
@@ -60,7 +56,7 @@ import toHtml from 'rehype-stringify'
 const doc = "```js\nconst hello = 'World';\n```\n"
 
 async function createProcessor() {
-  const highlighter = await shiki.getHighlighter({ theme: 'poimandres ' })
+  const highlighter = await shiki.getHighlighter({ theme: 'poimandres' })
 
   const processor = unified()
     .use(fromMarkdown)
