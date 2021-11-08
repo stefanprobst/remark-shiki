@@ -1,6 +1,6 @@
 {
   "name": "@stefanprobst/remark-shiki",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "type": "module",
@@ -20,7 +20,7 @@
     "validate": "yarn run format && yarn run lint && yarn run test"
   },
   "engines": {
-    "node": "14.x",
+    "node": ">=14.17",
     "yarn": "1.x"
   },
   "dependencies": {
@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^13.1.0",
+    "@jest/types": "^27.2.5",
     "@stefanprobst/commitlint-config": "^1.0.2",
     "@stefanprobst/eslint-config-node": "^2.0.1",
     "@stefanprobst/prettier-config": "^1.0.5",
@@ -42,14 +43,14 @@
     "eslint-plugin-jest": "^24.4.0",
     "eslint-plugin-node": "^11.1.0",
     "husky": "^4.0.0",
-    "jest": "^27.1.0",
+    "jest": "^27.3.1",
     "lint-staged": "^11.1.2",
     "prettier": "^2.3.2",
     "rehype-raw": "^6.1.0",
     "rehype-stringify": "^9.0.2",
     "remark-parse": "^10.0.0",
     "remark-rehype": "^9.0.0",
-    "shiki": "^0.9.6",
+    "shiki": "^0.9.12",
     "simple-git-hooks": "^2.6.1",
     "typescript": "^4.2.3"
   },
