@@ -1,11 +1,20 @@
 import { visit } from 'unist-util-visit'
 
-const MISSING_HIGHLIGHTER = `Please, provide a valid configuration: .use(remarkShiki, { /* Missing configuration */ highlighter })\n\nCheck \`README.md\` for details`;
+const MISSING_HIGHLIGHTER = `Please provide a \`shiki\` highlighter instance via \`options\`.
 
-export default function attacher(options) {
-  if (!options?.highlighter) throw MISSING_HIGHLIGHTER;
-  
+Example:
+
+const highlighter = await shiki.getHighlighter({ theme: 'poimandres' })
+const processor = remark().use(withShiki, { highlighter })
+`
+
+export default function attacher(options = {}) {
   const highlighter = options.highlighter
+
+  if (!highlighter) {
+    throw new Error(MISSING_HIGHLIGHTER)
+  }
+
   const loadedLanguages = highlighter.getLoadedLanguages()
   const ignoreUnknownLanguage =
     options.ignoreUnknownLanguage == null ? true : options.ignoreUnknownLanguage
