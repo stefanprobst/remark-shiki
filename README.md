@@ -42,7 +42,9 @@ createProcessor()
   })
 ````
 
-When transforming to html, make sure to parse `html` nodes with `rehype-raw` (or, alternatively, consider using [`@stefanprobst/rehype-shiki`](https://github.com/stefanprobst/rehype-shiki)):
+When transforming to html, make sure to parse `html` nodes with `rehype-raw`
+(or, alternatively, consider using
+[`@stefanprobst/rehype-shiki`](https://github.com/stefanprobst/rehype-shiki)):
 
 ````js
 import withShiki from '@stefanprobst/remark-shiki'
