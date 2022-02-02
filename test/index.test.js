@@ -1,6 +1,7 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
+import parseNumericRange from 'parse-numeric-range'
 import withHtmlInMarkdown from 'rehype-raw'
 import toHtml from 'rehype-stringify'
 import fromMarkdown from 'remark-parse'
@@ -20,6 +21,15 @@ const fixtures = {
   unknown: fs.readFileSync(path.resolve('./test/fixtures/unknown.md'), {
     encoding: 'utf-8',
   }),
+  highlight: fs.readFileSync(path.resolve('./test/fixtures/highlight.md'), {
+    encoding: 'utf-8',
+  }),
+  highlightCustom: fs.readFileSync(
+    path.resolve('./test/fixtures/highlight-custom.md'),
+    {
+      encoding: 'utf-8',
+    },
+  ),
 }
 
 async function createProcessor(options = {}) {
@@ -40,11 +50,11 @@ it('highlights code block in markdown', async () => {
   const vfile = await processor.process(fixtures.known)
 
   expect(vfile.toString()).toMatchInlineSnapshot(`
-"<h1>Heading</h1>
-<p>Text</p>
-<pre class=\\"shiki\\" style=\\"background-color: #2e3440ff\\"><code><span class=\\"line\\"><span style=\\"color: #81A1C1\\">const</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #D8DEE9\\">hello</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #81A1C1\\">=</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #ECEFF4\\">'</span><span style=\\"color: #A3BE8C\\">World</span><span style=\\"color: #ECEFF4\\">'</span></span></code></pre>
-<p>More text</p>"
-`)
+    "<h1>Heading</h1>
+    <p>Text</p>
+    <pre class=\\"shiki\\" style=\\"background-color: #2e3440ff\\"><code><span class=\\"line\\"><span style=\\"color: #81A1C1\\">const</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #D8DEE9\\">hello</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #81A1C1\\">=</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #ECEFF4\\">'</span><span style=\\"color: #A3BE8C\\">World</span><span style=\\"color: #ECEFF4\\">'</span></span></code></pre>
+    <p>More text</p>"
+  `)
 })
 
 it('highlights code block in markdown when running synchronously', async () => {
@@ -52,11 +62,11 @@ it('highlights code block in markdown when running synchronously', async () => {
   const vfile = processor.processSync(fixtures.known)
 
   expect(vfile.toString()).toMatchInlineSnapshot(`
-"<h1>Heading</h1>
-<p>Text</p>
-<pre class=\\"shiki\\" style=\\"background-color: #2e3440ff\\"><code><span class=\\"line\\"><span style=\\"color: #81A1C1\\">const</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #D8DEE9\\">hello</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #81A1C1\\">=</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #ECEFF4\\">'</span><span style=\\"color: #A3BE8C\\">World</span><span style=\\"color: #ECEFF4\\">'</span></span></code></pre>
-<p>More text</p>"
-`)
+    "<h1>Heading</h1>
+    <p>Text</p>
+    <pre class=\\"shiki\\" style=\\"background-color: #2e3440ff\\"><code><span class=\\"line\\"><span style=\\"color: #81A1C1\\">const</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #D8DEE9\\">hello</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #81A1C1\\">=</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #ECEFF4\\">'</span><span style=\\"color: #A3BE8C\\">World</span><span style=\\"color: #ECEFF4\\">'</span></span></code></pre>
+    <p>More text</p>"
+  `)
 })
 
 it('ignores code block without language', async () => {
@@ -101,3 +111,39 @@ it('shows error message for missing highlighter option', async () =>
   ).rejects.toThrow(
     'Please provide a `shiki` highlighter instance via `options`.',
   ))
+
+it('highlights lines in code block', async () => {
+  const processor = await createProcessor()
+  const vfile = await processor.process(fixtures.highlight)
+
+  expect(vfile.toString()).toMatchInlineSnapshot(`
+    "<h1>Heading</h1>
+    <p>Text</p>
+    <pre class=\\"shiki\\" style=\\"background-color: #2e3440ff\\"><code><span class=\\"line\\"><span style=\\"color: #81A1C1\\">const</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #D8DEE9\\">hello</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #81A1C1\\">=</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #ECEFF4\\">'</span><span style=\\"color: #A3BE8C\\">Hello</span><span style=\\"color: #ECEFF4\\">'</span></span>
+    <span class=\\"line highlighted-line\\"><span style=\\"color: #81A1C1\\">const</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #D8DEE9\\">hi</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #81A1C1\\">=</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #ECEFF4\\">'</span><span style=\\"color: #A3BE8C\\">Hi</span><span style=\\"color: #ECEFF4\\">'</span></span>
+    <span class=\\"line highlighted-line\\"><span style=\\"color: #81A1C1\\">const</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #D8DEE9\\">bye</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #81A1C1\\">=</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #ECEFF4\\">'</span><span style=\\"color: #A3BE8C\\">Bye</span><span style=\\"color: #ECEFF4\\">'</span></span>
+    <span class=\\"line\\"><span style=\\"color: #81A1C1\\">const</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #D8DEE9\\">greetz</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #81A1C1\\">=</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #ECEFF4\\">'</span><span style=\\"color: #A3BE8C\\">Greetz</span><span style=\\"color: #ECEFF4\\">'</span></span></code></pre>
+    <p>More text</p>"
+  `)
+})
+
+it('highlights lines in code block with custom parsed code meta', async () => {
+  const processor = await createProcessor({
+    parseMeta(meta) {
+      return parseNumericRange(meta.replace(/{(.*?)}/, '$1')).map((line) => {
+        return { line, classes: ['highlighted-line'] }
+      })
+    },
+  })
+  const vfile = await processor.process(fixtures.highlightCustom)
+
+  expect(vfile.toString()).toMatchInlineSnapshot(`
+    "<h1>Heading</h1>
+    <p>Text</p>
+    <pre class=\\"shiki\\" style=\\"background-color: #2e3440ff\\"><code><span class=\\"line\\"><span style=\\"color: #81A1C1\\">const</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #D8DEE9\\">hello</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #81A1C1\\">=</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #ECEFF4\\">'</span><span style=\\"color: #A3BE8C\\">Hello</span><span style=\\"color: #ECEFF4\\">'</span></span>
+    <span class=\\"line highlighted-line\\"><span style=\\"color: #81A1C1\\">const</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #D8DEE9\\">hi</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #81A1C1\\">=</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #ECEFF4\\">'</span><span style=\\"color: #A3BE8C\\">Hi</span><span style=\\"color: #ECEFF4\\">'</span></span>
+    <span class=\\"line highlighted-line\\"><span style=\\"color: #81A1C1\\">const</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #D8DEE9\\">bye</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #81A1C1\\">=</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #ECEFF4\\">'</span><span style=\\"color: #A3BE8C\\">Bye</span><span style=\\"color: #ECEFF4\\">'</span></span>
+    <span class=\\"line\\"><span style=\\"color: #81A1C1\\">const</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #D8DEE9\\">greetz</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #81A1C1\\">=</span><span style=\\"color: #D8DEE9FF\\"> </span><span style=\\"color: #ECEFF4\\">'</span><span style=\\"color: #A3BE8C\\">Greetz</span><span style=\\"color: #ECEFF4\\">'</span></span></code></pre>
+    <p>More text</p>"
+  `)
+})

@@ -138,3 +138,42 @@ grammars, concat `shiki.BUNDLED_LANGUAGES`.
 Unknown languages are ignored by default. You can set
 `ignoreUnknownLanguage: false` to throw an error when an unsupported language is
 encountered.
+
+### Highlighted lines
+
+Code block metadata can be used to add css classes to specific lines. By
+default, a `highlighted-line` class will be added for line ranges defined like
+this:
+
+````md
+```js {highlight: '2..3'}
+function hi() {
+  console.log('Hi!')
+  return true
+}
+```
+````
+
+Since there is no specification or widely used convention how code block
+metadata should be interpreted, it is possible to provide a custom parse
+function:
+
+```js
+const processor = unified()
+  .use(fromMarkdown)
+  .use(withShiki, {
+    highlighter,
+    parseMeta(meta) {
+      /** Parse the meta string however you want. */
+      return [
+        {
+          line: 1,
+          classes: ['highlighted'],
+          line: 2,
+          classes: ['highlighted'],
+        },
+      ]
+    },
+  })
+  .use(toMarkdown)
+```
