@@ -92,3 +92,12 @@ it('throws when code block has unknown language and ignoreUnknownLanguage is set
     'No language registration for unknown',
   )
 })
+
+it('shows error message for missing highlighter option', async () =>
+  expect(
+    createProcessor({ highlighter: undefined }).then((processor) =>
+      processor.process(fixtures.unknown),
+    ),
+  ).rejects.toThrow(
+    'Please provide a `shiki` highlighter instance via `options`.',
+  ))
