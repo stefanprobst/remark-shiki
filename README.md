@@ -166,12 +166,8 @@ const processor = unified()
     parseMeta(meta) {
       /** Parse the meta string however you want. */
       return [
-        {
-          line: 1,
-          classes: ['highlighted'],
-          line: 2,
-          classes: ['highlighted'],
-        },
+        { line: 1, classes: ['highlighted'], }
+        { line: 2, classes: ['highlighted'], }
       ]
     },
   })
