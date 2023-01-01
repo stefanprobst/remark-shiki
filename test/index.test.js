@@ -9,7 +9,7 @@ import toHast from 'remark-rehype'
 import * as shiki from 'shiki'
 import { unified } from 'unified'
 
-import withShiki from '../src'
+import withShiki from '../src/index.js'
 
 const fixtures = {
   known: fs.readFileSync(path.resolve('./test/fixtures/test.md'), {
